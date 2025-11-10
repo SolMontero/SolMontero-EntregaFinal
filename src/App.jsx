@@ -1,0 +1,23 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Hero from "./components/Hero";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import SobreNosotros from "./components/SobreNosotros";
+import ProductList from "./components/ProductList";
+
+function App() {
+  return (
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Catalogo" element={<ProductList />} />
+        <Route path="/SobreNosotros" element={<SobreNosotros />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
