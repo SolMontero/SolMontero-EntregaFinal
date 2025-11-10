@@ -34,9 +34,7 @@ function NavBar() {
               <Nav.Link as={Link} to="/SobreNosotros">
                 Sobre Nosotros
               </Nav.Link>
-              <Nav.Link as={Link} to="/Login">
-                Login
-              </Nav.Link>
+              <Nav.Link as={Link} to="/Login"></Nav.Link>
 
               <Button
                 as={Link}

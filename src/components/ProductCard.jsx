@@ -3,17 +3,15 @@ import "../ProductCard.css";
 
 const ProductCard = ({ product }) => {
   return (
-    <Card className="product-card h-100 d-flex flex-column">
+    <Card className="product-card h-100 shadow-sm">
       <Card.Img
         variant="top"
         src={product.UrlImagen}
         alt={product.titulo}
         className="product-card-img"
       />
-
-      <Card.Body className="d-flex flex-column">
+      <Card.Body className="d-flex flex-column justify-content-between">
         <Card.Title className="product-card-title">{product.titulo}</Card.Title>
-
         <Card.Text className="product-card-price">
           <strong>${product.Precio}</strong>
         </Card.Text>
