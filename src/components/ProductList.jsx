@@ -1,96 +1,64 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col } from "react-bootstrap";
 import ProductCard from "./ProductCard";
+import Filtros from "./Filtros";
 import { Spinner } from "react-bootstrap";
-import sideBarFiltros from "./Filtros";
+import "../ProductList.css";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filtros, setFiltros] = useState({
+    Ubicacion: "",
+    PrecioMax: "",
+    MedidaSuperficieMin: ""
+  });
+
   const API_URL = "https://690e1595bd0fefc30a036535.mockapi.io/Terrenos";
 
   useEffect(() => {
     fetch(API_URL)
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
         setProducts(data);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+      .catch((err) => {
+        console.error("Error:", err);
         setLoading(false);
       });
   }, []);
 
-  if (loading) {
-    return <Spinner animation="border" variant="primary" />;
-  }
+  if (loading)
+    return <Spinner animation="border" className="d-block mx-auto mt-5" />;
+
+  const productosFiltrados = products.filter((p) => {
+    const coincideUbicacion =
+      filtros.Ubicacion === "" ||
+      p.Ubicacion.toLowerCase().includes(filtros.Ubicacion.toLowerCase());
+    const coincidePrecio =
+      filtros.PrecioMax === "" || p.Precio <= parseFloat(filtros.PrecioMax);
+    const coincideSuperficie =
+      filtros.MedidaSuperficieMin === "" ||
+      p.MedidaSuperficie >= parseFloat(filtros.MedidaSuperficieMin);
+    return coincideUbicacion && coincidePrecio && coincideSuperficie;
+  });
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "20px",
-        padding: "40px",
-        backgroundColor: "#4e614eff",
-      }}
-    >
-      {/* Sidebar */}
-      <div
-        style={{
-          width: "250px",
-          backgroundColor: "#f0f0f0",
-          padding: "20px",
-          borderRadius: "12px",
-        }}
-      >
-        <h3>Zonas</h3>
-        <div>
-          <label>
-            <input type="radio" name="zona" /> San Antonio de Padua
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="zona" /> Pilar
-          </label>
-        </div>
-        <h3>Precios</h3>
-        <div>
-          <label>
-            <input type="radio" name="precio" /> $15.000
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="precio" /> $18.500
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="precio" /> $20.000
-          </label>
-        </div>
-        <h3>Medidas</h3>
-        <div>
-          <label>
-            <input type="radio" name="medida" /> 30x100
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="medida" /> 60x200
-          </label>
-        </div>
-      </div>
+    <section className="feature-section">
+      <div className="feature-container">
+        {/* Panel de filtros */}
+        <aside className="filters">
+          <Filtros filtros={filtros} onChange={setFiltros} />
+        </aside>
 
-      {/* Listado de productos */}
-      <div style={{ flex: 1 }}>
-        <Row xs={1} md={2} className="g-4">
-          {products.map((product, index) => (
-            <Col key={index}>
-              <ProductCard product={product} />
-            </Col>
+        {/* Grilla de productos */}
+        <main className="grid-container">
+          {productosFiltrados.map((p) => (
+            <ProductCard key={p.idTerreno} product={p} />
           ))}
-        </Row>
+        </main>
       </div>
-    </div>
+    </section>
   );
 };
 

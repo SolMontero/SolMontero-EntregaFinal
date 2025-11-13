@@ -5,7 +5,7 @@ import "../Hero.css";
 
 function Hero() {
   return (
-    <div>
+    <div className="hero-container">
       <video
         className="hero-video"
         src="https://res.cloudinary.com/dqr3lnf49/video/upload/v1762784258/videoOp_dwrw9t.mp4"

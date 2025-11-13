@@ -1,0 +1,65 @@
+/* Sección general */
+.feature-section {
+  background-color: #f7f7f7;
+  padding: 60px 0;
+}
+
+/* Contenedor principal (filtros + cards) */
+.feature-container {
+  display: flex;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  gap: 40px;
+}
+
+/* Panel de filtros */
+.filters {
+  flex: 0 0 250px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  height: fit-content;
+}
+
+/* Grilla de cards */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Card individual */
+.grid-container > * {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grid-container > *:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .feature-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .filters {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .grid-container {
+    width: 100%;
+  }
+}
