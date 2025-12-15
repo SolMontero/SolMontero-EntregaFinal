@@ -1,52 +1,99 @@
-import React from "react";
-import { Container, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import "../Hero.css"; // fondo y overlay
-import "../Login.css";  // estilos específicos del login
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
+import AuthLayout from "./AuthLayout";
+
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+  const redirectPath = location.state?.from || "/";
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = (e) => {
+  e.preventDefault();
+  setError("");
+
+  if (!email || !password) {
+    setError("Todos los campos son obligatorios");
+    return;
+  }
+
+  // ADMIN
+  if (email === "admin@admin.com" && password === "Admin123") {
+    login(email, "admin");
+    navigate("/admin");
+    return;
+  }
+
+  // USUARIOS
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const userFound = users.find((u) => u.email === email);
+
+  if (!userFound) {
+    setError("Usuario no registrado");
+    return;
+  }
+
+  if (userFound.password !== password) {
+    setError("Contraseña incorrecta");
+    return;
+  }
+
+  login(userFound.email, "user");
+  navigate(redirectPath);
+};
+
+
   return (
-    <div className="login-page">
-      {/* Video de fondo */}
-      <video
-        className="hero-video"
-        src="https://res.cloudinary.com/dqr3lnf49/video/upload/v1762784258/videoOp_dwrw9t.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
-      <div className="hero-overlay"></div>
+    <AuthLayout title="Login">
+       <Form onSubmit={handleLogin}>
+        <Form.Group className="mb-3">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Ingrese su email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
 
-      {/* Login centrado */}
-      <Container className="login-container d-flex justify-content-center align-items-center">
-        <div className="login-box p-4">
-          <h2 className="login-title mb-4">Iniciar Sesión</h2>
-          <Form>
-            <Form.Group className="mb-3" controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Ingrese su email" />
-            </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Contraseña</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Ingrese su contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formPassword">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control type="password" placeholder="Ingrese su contraseña" />
-            </Form.Group>
+        <Button type="submit" className="w-100 mb-3">
+          Iniciar Sesión
+        </Button>
 
-            <Button variant="primary" type="submit" className="w-100 mb-3">
-              Iniciar Sesión
-            </Button>
+        {error && (
+          <div className="text-danger text-center mt-2">
+            {error}
+          </div>
+        )}
 
-            <div className="text-center">
-              <span>No estás registrado? </span>
-              <Link to="/registro" className="register-link">Regístrate</Link>
-            </div>
-          </Form>
+        <div className="text-center mt-3">
+          <span>No estás registrado? </span>
+          <Link as={Link} to="/registro" className="register-link">
+            Regístrate
+          </Link>
         </div>
-      </Container>
-    </div>
+      </Form>
+    </AuthLayout>
+     
+      
   );
 };
 
 export default Login;
-
